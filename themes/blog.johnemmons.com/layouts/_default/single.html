@@ -1,8 +1,16 @@
 {{ partial "header.html" . }}
 
 <div class="post-navbar">
-  blog @ <a href="http://johnemmons.com">johnemmons.com</a>
-  <a href="{{ .Site.BaseURL}}">back to homepage</a>
+  <table width="100%" style="margin:0; padding:0;">
+    <tr>
+      <td widht="50%">
+        blog @ <a href="http://johnemmons.com">johnemmons.com</a>
+      </td>
+      <td style="text-align:right;" widht="50%">
+        <a href="{{ .Site.BaseURL}}">back to homepage</a>
+      </td>
+    </tr>
+  </table>
 </div>
 
 <div class="post-title">
@@ -10,12 +18,12 @@
   <div class="time">{{ .Date.Format "January 2, 2006" }}</div>
 </div>
 
-<div class="abstract">
+<div class="post-abstract">
   {{ .Description }}
 </div>
 <br />
 
-<div class="blog-post">
+<div class="post-text">
   {{ .Content }}
 </div>
         
