@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on blog @ johnemmons.com</title>
+    <link>http://blog.johnemmons.com/post/index.xml</link>
+    <description>Recent content in Posts on blog @ johnemmons.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 29 Dec 2016 11:27:20 -0600</lastBuildDate>
+    <atom:link href="http://blog.johnemmons.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Panopticon: a system for searching video quickly and accurately</title>
+      <link>http://blog.johnemmons.com/post/panopt_part1/</link>
+      <pubDate>Thu, 29 Dec 2016 11:27:20 -0600</pubDate>
+      
+      <guid>http://blog.johnemmons.com/post/panopt_part1/</guid>
+      <description>&lt;div class=&#34;abstract&#34;&gt;
+TL;DR: Inexpensive, high resolution video sensors are deployed in increasing
+numbers in a wide variety of applications ranging from video surveillance to
+self-driving cars. Simultaneously, convolutional neural networks (CNNs) have
+become the the dominant tool for deriving semantic information from this kind of
+visual data but are in turn highly computationally expensive. To illustrate, a
+webcam costs as little as $2, but the hardware needed to actually evaluate a CNN
+on the webcam video stream in real time can cost $1200 or more. To balance this
+differential, we are developing Panopticon, a fast data system for fast indexing
+of video streams using object detection and localization, thus allowing semantic
+search (e.g., &#34;show me videos of bears on bicycles&#34;), at scale. Panopticon
+exploits temporal locality and redundancy between video frames to deliver order
+of magnitude speedups compared to state-of-the-art CNN-based alternatives while
+still retaining their accuracy.
+&lt;/div&gt;
+
+&lt;!--more--&gt;
+
+&lt;br/&gt;
+&lt;div class=&#34;blog-post&#34;&gt;
+  This is where the blog post material would go!
+&lt;/div&gt;
+
+</description>
+    </item>
+    
+  </channel>
+</rss>
