@@ -1,6 +1,5 @@
-languageCode: "en-us"
 title: "blog @ johnemmons.com"
 baseurl: "http://blog.johnemmons.com/"
-theme: "blog.johnemmons.com"
+languageCode: "en-us"
 
 MetaDataFormat: "yaml"
