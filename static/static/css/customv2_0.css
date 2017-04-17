@@ -36,8 +36,20 @@
     color: black;
 }
 
-a {
-    color:black;
+a:link {
+    color: #222266;
+}
+
+a:visited {
+    color: #222266;
+}
+
+a:hover {
+    color: blue;
+}
+
+a:active {
+    color: blue;
 }
 
 h1, h2, h3, h4, h5 {
