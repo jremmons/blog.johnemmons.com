@@ -1,8 +1,176 @@
 ---
 date: 2017-01-08T15:05:07-08:00
-draft: true
-title: work_life_balance
+draft: false
+title: "RAID in the Wild"
 
-description: "TL;DR: blah blah blah"
+description: "TL;DR: Redundant array of independent disks (RAID) is an old
+technology (first invented in 1977) for improving the reliability, availability,
+and performance of disk drives. You likely interact with systems that use RAID
+on a daily basis as it backs almost all storage systems and is used in
+applications ranging from commerical cloud storage to supercomputing. However
+for me (and probably many others), RAID was only ever a clever idea discussed on
+the chalkboard for ~10 minutes in my college computer systems course. Well, I
+just experienced a disk failure on my personal file server and the RAID1 setup I
+had saved the day (no data loss!); even though this is not remarkable from a
+theoretical standpoint, there is something satisfying about seeing this
+classroom concept work in the wild."
 ---
 
+<div style="width:100%;margin-bottom:10px;">
+  <div style="margin: 0 auto;border:solid;border-width:2px;border-color:rgb(200,200,200);text-align:center;min-width:300px;max-width:100%;width:600px;border-radius:10px;">
+    <a href="/images/raid/blog_john_emmons_raid_email.jpg">
+      <img src="/images/raid/blog_john_emmons_raid_email.jpg" alt="raid_email" style="width:100%;border-radius:7px;" >
+    </a>
+    <p style="padding:10px;padding-bottom:0px;text-align:left">
+      Figure XYZ: receiving news of the damaged hard drive in my personal file
+      server.
+    </p>
+  </div>
+</div>
+
+<p>
+  Six days ago I arrived in California after driving 30 hours and
+  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
+    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
+  either. It was three long days of driving sunrise to
+  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
+  of anxiety and nervousness always accompanies new experiences; but spending 30
+  hours in the car thinking about the next 5-6 year of constant grad student
+  struggle amplified my concerns to fullblown terror by the time I arrived.
+</p>
+
+<p>
+  Six days ago I arrived in California after driving 30 hours and
+  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
+    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
+  either. It was three long days of driving sunrise to
+  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
+  of anxiety and nervousness always accompanies new experiences; but spending 30
+  hours in the car thinking about the next 5-6 year of constant grad student
+  struggle amplified my concerns to fullblown terror by the time I arrived.
+</p>
+
+<p>
+  Six days ago I arrived in California after driving 30 hours and
+  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
+    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
+  either. It was three long days of driving sunrise to
+  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
+  of anxiety and nervousness always accompanies new experiences; but spending 30
+  hours in the car thinking about the next 5-6 year of constant grad student
+  struggle amplified my concerns to fullblown terror by the time I arrived.
+</p>
+
+<div style="width:100%;margin-bottom:10px;">
+  <div style="margin: 0 auto;border:solid;border-width:2px;border-color:rgb(200,200,200);text-align:center;min-width:300px;max-width:100%;width:600px;border-radius:10px;">
+    <a href="/images/raid/blog_john_emmons_amazon.jpg">
+      <img src="/images/raid/blog_john_emmons_amazon.jpg" alt="computer_guts" style="min-width:300px;width:100%;border-radius:7px;" >
+    </a>
+    <p style="padding:10px;padding-bottom:0px;text-align:left">
+      Figure XYZ: tearing open the guts of the file server and replacing the damaged hard
+      drive with the new one from the mail.
+    </p>
+  </div>
+</div>
+
+<p>
+  Six days ago I arrived in California after driving 30 hours and
+  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
+    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
+  either. It was three long days of driving sunrise to
+  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
+  of anxiety and nervousness always accompanies new experiences; but spending 30
+  hours in the car thinking about the next 5-6 year of constant grad student
+  struggle amplified my concerns to fullblown terror by the time I arrived.
+</p>
+
+
+<p>
+  Six days ago I arrived in California after driving 30 hours and
+  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
+    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
+  either. It was three long days of driving sunrise to
+  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
+  of anxiety and nervousness always accompanies new experiences; but spending 30
+  hours in the car thinking about the next 5-6 year of constant grad student
+  struggle amplified my concerns to fullblown terror by the time I arrived.
+</p>
+
+<div style="width:100%;margin-bottom:10px;">
+  <div style="margin: 0 auto;border:solid;border-width:2px;border-color:rgb(200,200,200);text-align:center;min-width:300px;max-width:100%;width:600px;border-radius:10px;">
+    <a href="/images/raid/blog_john_emmons_guts.jpg">
+      <img src="/images/raid/blog_john_emmons_guts_small.jpg" alt="computer_guts" style="min-width:300px;width:100%;border-radius:7px;" >
+    </a>
+    <p style="padding:10px;padding-bottom:0px;text-align:left">
+      Figure XYZ: tearing open the guts of the file server and replacing the damaged hard
+      drive with the new one from the mail.
+    </p>
+  </div>
+</div>
+
+<p>
+  Six days ago I arrived in California after driving 30 hours and
+  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
+    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
+  either. It was three long days of driving sunrise to
+  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
+  of anxiety and nervousness always accompanies new experiences; but spending 30
+  hours in the car thinking about the next 5-6 year of constant grad student
+  struggle amplified my concerns to fullblown terror by the time I arrived.
+</p>
+
+<p>
+  Six days ago I arrived in California after driving 30 hours and
+  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
+    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
+  either. It was three long days of driving sunrise to
+  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
+  of anxiety and nervousness always accompanies new experiences; but spending 30
+  hours in the car thinking about the next 5-6 year of constant grad student
+  struggle amplified my concerns to fullblown terror by the time I arrived.
+</p>
+
+<p>
+  Six days ago I arrived in California after driving 30 hours and
+  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
+    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
+  either. It was three long days of driving sunrise to
+  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
+  of anxiety and nervousness always accompanies new experiences; but spending 30
+  hours in the car thinking about the next 5-6 year of constant grad student
+  struggle amplified my concerns to fullblown terror by the time I arrived.
+</p>
+
+<p>
+  Six days ago I arrived in California after driving 30 hours and
+  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
+    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
+  either. It was three long days of driving sunrise to
+  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
+  of anxiety and nervousness always accompanies new experiences; but spending 30
+  hours in the car thinking about the next 5-6 year of constant grad student
+  struggle amplified my concerns to fullblown terror by the time I arrived.
+</p>
+
+<div style="width:100%;margin-bottom:10px;">
+  <div style="margin: 0 auto;border:solid;border-width:2px;border-color:rgb(200,200,200);text-align:center;min-width:300px;max-width:100%;width:600px;border-radius:10px;">
+    <a href="/images/raid/blog_john_emmons_healed_email.jpg">
+      <img src="/images/raid/blog_john_emmons_healed_email.jpg" alt="computer_guts" style="min-width:300px;width:100%;border-radius:7px;" >
+    </a>
+    <p style="padding:10px;padding-bottom:0px;text-align:left">
+      Figure XYZ: tearing open the guts of the file server and replacing the damaged hard
+      drive with the new one from the mail.
+    </p>
+  </div>
+</div>
+
+<p>
+  Six days ago I arrived in California after driving 30 hours and
+  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
+    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
+  either. It was three long days of driving sunrise to
+  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
+  of anxiety and nervousness always accompanies new experiences; but spending 30
+  hours in the car thinking about the next 5-6 year of constant grad student
+  struggle amplified my concerns to fullblown terror by the time I arrived.
+</p>
