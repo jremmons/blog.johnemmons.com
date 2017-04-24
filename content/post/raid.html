@@ -1,19 +1,20 @@
 ---
-date: 2017-01-08T15:05:07-08:00
+date: 2017-04-23T15:05:07-08:00
 draft: false
 title: "RAID in the Wild"
 
 description: "TL;DR: Redundant array of independent disks (RAID) is an old
-technology (first invented in 1977) for improving the reliability, availability,
-and performance of disk drives. You likely interact with systems that use RAID
-on a daily basis as it backs almost all storage systems and is used in
-applications ranging from commerical cloud storage to supercomputing. However
-for me (and probably many others), RAID was only ever a clever idea discussed on
-the chalkboard for ~10 minutes in my college computer systems course. Well, I
-just experienced a disk failure on my personal file server and the RAID1 setup I
-had saved the day (no data loss!); even though this is not remarkable from a
-theoretical standpoint, there is something satisfying about seeing this
-classroom concept work in the wild."
+technology (first conceived in 1977) for improving the reliability,
+availability, and performance of disk drives. You likely interact with systems
+that use RAID on a daily basis as it backs almost all storage systems and is
+used in applications ranging from commercial cloud storage to
+supercomputing. However for me (and probably many others), RAID was only ever a
+clever idea discussed on the chalkboard for ~10 minutes in a college computer
+systems course. Well, I just experienced a disk failure on my personal file
+server and the RAID1 setup I had saved the day (no data loss!); even though this
+is not remarkable from a theoretical standpoint, there is something satisfying
+about seeing this classroom concept work in the wild."
+
 ---
 
 <div style="width:100%;margin-bottom:10px;">
@@ -22,43 +23,60 @@ classroom concept work in the wild."
       <img src="/images/raid/blog_john_emmons_raid_email.jpg" alt="raid_email" style="width:100%;border-radius:7px;" >
     </a>
     <p style="padding:10px;padding-bottom:0px;text-align:left">
-      Figure XYZ: receiving news of the damaged hard drive in my personal file
-      server.
+      Figure 1: The email I received the night of a hard drive failure
+      (/dev/sdd) on my personal file server. The drive was part of a RAID1 array
+      which is checked every night at 2:30am; emails reports are sent to me so I
+      can monitor the status of the server without directly accessing it.
     </p>
   </div>
 </div>
 
+<!-- <p> -->
+<!--   * For those unfamiliar with RAID, I recommend skimming the Wikipedia article -->
+<!--   here -->
+<!--   (<a href="https://en.wikipedia.org/wiki/RAID">https://en.wikipedia.org/wiki/RAID</a>). -->
+<!-- </p> -->
+
 <p>
-  Six days ago I arrived in California after driving 30 hours and
-  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
-    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
-  either. It was three long days of driving sunrise to
-  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
-  of anxiety and nervousness always accompanies new experiences; but spending 30
-  hours in the car thinking about the next 5-6 year of constant grad student
-  struggle amplified my concerns to fullblown terror by the time I arrived.
+  Sometime during the night of April 14th a hard drive (/dev/sdd) went silent;
+  its platter resting motionlessly as increasingly desperate read and write
+  requests from the operating system went unanswered. After trying
+  unsuccessfully to resuscitate /dev/sdd, the operating system pronounced the
+  hard drive dead. The medical examiner (i.e. the sysadmin, me) was then
+  summoned to the scene with the message: "RAID DEGRADED" (figure 1). While
+  performing an autopsy (i.e. checking the server logs), nothing that would
+  explain /dev/sdd's death was found. We can only speculate what the true cause
+  of death was; perhaps it was an electrical spike, a speck of dust on the
+  read/write head, a cosmic ray, or divine intervention; God only knows. Sudden
+  deaths like these are especially tragic because those close to the deceased
+  have no time to prepare; often greatly extending the recovery
+  process. Fortunately, /dev/sdd was a member of a RAID1 array!
 </p>
 
 <p>
-  Six days ago I arrived in California after driving 30 hours and
-  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
-    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
-  either. It was three long days of driving sunrise to
-  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
-  of anxiety and nervousness always accompanies new experiences; but spending 30
-  hours in the car thinking about the next 5-6 year of constant grad student
-  struggle amplified my concerns to fullblown terror by the time I arrived.
+  Alright, enough with melodramatic storytelling. When I checked my email on
+  April 14th I got the message shown in figure 1; the hard drive I used to store
+  all my personal files and my family's home movies and photographs had
+  failed. Decades worth of irreplaceable videos, photographs, and personal files
+  were lost in an instant when the hard drive died. This would have been an
+  unmitigated disaster except I had configured the hard drive in a RAID array.
+  Specifically, the hard drives referred to as /dev/sdc and /dev/sdd were
+  configured as a RAID1
+  array. <a href="https://en.wikipedia.org/wiki/Standard_RAID_levels">RAID1</a>
+  provides redundancy against hard drive failures like the one I experienced by
+  mirroring contents across all hard drives in the array; when /dev/sdd failed,
+  /dev/sdc had an exact replica of the data, so the file server storing my and
+  my family's files continued running without interruption.
 </p>
 
 <p>
-  Six days ago I arrived in California after driving 30 hours and
-  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
-    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
-  either. It was three long days of driving sunrise to
-  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
-  of anxiety and nervousness always accompanies new experiences; but spending 30
-  hours in the car thinking about the next 5-6 year of constant grad student
-  struggle amplified my concerns to fullblown terror by the time I arrived.
+  I had simulated disk failures when I built and configured my file server, but
+  this was the first time I had experienced a disk failure in production. It may
+  seem small, but seeing <span style="font-style:italic">my</span> system
+  perform flawlessly under a real world hardware failure was
+  super <span style="font-style:italic">awesome</span> (at least to me). I can
+  only imagine the relief system administrators of the 1970s and 1980s had when
+  they first deployed RAID in their storage systems. 
 </p>
 
 <div style="width:100%;margin-bottom:10px;">
@@ -67,33 +85,57 @@ classroom concept work in the wild."
       <img src="/images/raid/blog_john_emmons_amazon.jpg" alt="computer_guts" style="min-width:300px;width:100%;border-radius:7px;" >
     </a>
     <p style="padding:10px;padding-bottom:0px;text-align:left">
-      Figure XYZ: tearing open the guts of the file server and replacing the damaged hard
-      drive with the new one from the mail.
+      Figure 2: One of the primary reasons to use RAID is that it can create
+      reliable storage devices by combining many unreliable and inexpensive
+      devices. Even the cheap, consumer-grade hard drive shown above can be used
+      in mission critical applications without incurring undue risk if properly
+      configured in a RAID array.
     </p>
   </div>
 </div>
 
 <p>
-  Six days ago I arrived in California after driving 30 hours and
-  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
-    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
-  either. It was three long days of driving sunrise to
-  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
-  of anxiety and nervousness always accompanies new experiences; but spending 30
-  hours in the car thinking about the next 5-6 year of constant grad student
-  struggle amplified my concerns to fullblown terror by the time I arrived.
+  Anyway, even though my file server was still working and I had not lost any
+  data (yet), I needed to replace the broken drive as soon as possible. If the
+  second drive (/dev/sdc) failed before I restored the RAID array, data would
+  truly be lost. So I quickly ordered a new drive on Amazon (figure 2) and
+  waited anxiously for the shipment to arrive.
 </p>
 
+<p>
+  Several days later, I got the new hard drive in the mail! If I were
+  using <a href="https://en.wikipedia.org/wiki/Disk_array_controller">Hardware
+  RAID</a>, the recovery process would automatically begin as soon I installed
+  the new drive; however, when I built the file server I opted to save money
+  (hardware RAID controllers are expensive!) and use the default software RAID
+  controller for Linux, <span style="font-style:italic">mdadm</span>. The first
+  step on the road to recovery was to remove the broken hard drive from the
+  software RAID controller.
+</p>
+
+{{< highlight bash >}}
+# get status of RAID array
+$ cat /proc/mdstat
+Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5] [raid4] [raid10]
+md0 : active raid1 sdb1[1] sda1[0]
+976629568 blocks super 1.2 [2/2] [UU]
+
+md1 : active raid1 sdd1[1](F) sdc1[0]
+2930133824 blocks super 1.2 [2/1] [U_]
+
+unused devices: none
+
+# remove the failed drive
+$ mdadm --manage /dev/md1 --remove /dev/sdd1
+mdadm: hot removed /dev/sdd1
+{{< /highlight >}}
 
 <p>
-  Six days ago I arrived in California after driving 30 hours and
-  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
-    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
-  either. It was three long days of driving sunrise to
-  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
-  of anxiety and nervousness always accompanies new experiences; but spending 30
-  hours in the car thinking about the next 5-6 year of constant grad student
-  struggle amplified my concerns to fullblown terror by the time I arrived.
+  Once the broken hard drive was removed from the RAID array in software, it was
+  time to power off the server and replace the drive (figure 3). After carefully
+  opening up the server and unplugging the dead drive from the motherboard, I
+  opened up the antistatic bag containing the new hard drive and installed
+  it. So far so good.
 </p>
 
 <div style="width:100%;margin-bottom:10px;">
@@ -102,54 +144,47 @@ classroom concept work in the wild."
       <img src="/images/raid/blog_john_emmons_guts_small.jpg" alt="computer_guts" style="min-width:300px;width:100%;border-radius:7px;" >
     </a>
     <p style="padding:10px;padding-bottom:0px;text-align:left">
-      Figure XYZ: tearing open the guts of the file server and replacing the damaged hard
-      drive with the new one from the mail.
+      Figure 3: Tearing open the guts of my file server, removing the damaged
+      hard drive, and replacing it with the new one.
     </p>
   </div>
 </div>
 
 <p>
-  Six days ago I arrived in California after driving 30 hours and
-  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
-    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
-  either. It was three long days of driving sunrise to
-  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
-  of anxiety and nervousness always accompanies new experiences; but spending 30
-  hours in the car thinking about the next 5-6 year of constant grad student
-  struggle amplified my concerns to fullblown terror by the time I arrived.
+  Next, I needed to prepare the new hard drive and attach it to the RAID array.
+  Using standard UNIX tools we can copy the partition table of the working drive
+  to the newly installed drive. Then again
+  using <span style="font-style:italic">mdadm</span>, we can attach the new
+  drive to the RAID array; once the new drive is attached, the recovery process
+  will begin automatically!
 </p>
 
-<p>
-  Six days ago I arrived in California after driving 30 hours and
-  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
-    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
-  either. It was three long days of driving sunrise to
-  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
-  of anxiety and nervousness always accompanies new experiences; but spending 30
-  hours in the car thinking about the next 5-6 year of constant grad student
-  struggle amplified my concerns to fullblown terror by the time I arrived.
-</p>
+{{< highlight bash >}}
+# copy the partitions from the healthy drive to the new drive
+$ sfdisk -d /dev/sdc | sfdisk /dev/sdd
 
-<p>
-  Six days ago I arrived in California after driving 30 hours and
-  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
-    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
-  either. It was three long days of driving sunrise to
-  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
-  of anxiety and nervousness always accompanies new experiences; but spending 30
-  hours in the car thinking about the next 5-6 year of constant grad student
-  struggle amplified my concerns to fullblown terror by the time I arrived.
-</p>
+# attach the newly partitioned drive to the RAID array
+$ mdadm --manage /dev/md1 --add /dev/sdd1
+mdadm: re-added /dev/sdd1
+  
+# check the status of the RAID array
+$ cat /proc/mdstat
+Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5] [raid4] [raid10]
+md0 : active raid1 sdb1[2] sda1[0]
+976629568 blocks super 1.2 [2/2] [UU]
 
-<p>
-  Six days ago I arrived in California after driving 30 hours and
-  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
-    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
-  either. It was three long days of driving sunrise to
-  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
-  of anxiety and nervousness always accompanies new experiences; but spending 30
-  hours in the car thinking about the next 5-6 year of constant grad student
-  struggle amplified my concerns to fullblown terror by the time I arrived.
+md1 : active raid1 sdd1[1] sdc1[0]
+2930135360 blocks super 1.2 [2/2] [UU]
+[>....................]  recovery = 0.4% (10923836/2930135360)
+  finish=448.0min speed=10918K/sec
+
+unused devices: none
+{{< /highlight >}}
+
+ <p>
+  Excellent, the RAID array is copying data from /dev/sdc to the newly installed
+  /dev/sdd drive. Time to get some rest while we wait for the system to fully
+  recover.
 </p>
 
 <div style="width:100%;margin-bottom:10px;">
@@ -158,19 +193,38 @@ classroom concept work in the wild."
       <img src="/images/raid/blog_john_emmons_healed_email.jpg" alt="computer_guts" style="min-width:300px;width:100%;border-radius:7px;" >
     </a>
     <p style="padding:10px;padding-bottom:0px;text-align:left">
-      Figure XYZ: tearing open the guts of the file server and replacing the damaged hard
-      drive with the new one from the mail.
+      Figure 4: After installing the new hard drive, my nightly integrity check
+      catches the RAID array as it finishes up the recovery process.
     </p>
   </div>
 </div>
 
 <p>
-  Six days ago I arrived in California after driving 30 hours and
-  over <a href="https://www.google.com/maps/dir/Anoka,+MN/Menlo+Park,+CA/@41.7897485,-114.7629635,5.25z/data=!4m15!4m14!1m5!1m1!1s0x52b317bc617b8651:0x6b8c8cae8bbaf3e6!2m2!1d-93.3871758!2d45.1977428!1m5!1m1!1s0x808fa6b1117280ff:0xebbf998e5df289ab!2m2!1d-122.1817252!2d37.4529598!3e0!5i1">2000
-    miles</a> from Minneapolis, Minnesota (my home town). I didn't waste any time
-  either. It was three long days of driving sunrise to
-  sunset; <span style="font-style: italic">and I did it by myself</span>. A bit
-  of anxiety and nervousness always accompanies new experiences; but spending 30
-  hours in the car thinking about the next 5-6 year of constant grad student
-  struggle amplified my concerns to fullblown terror by the time I arrived.
+  Waking up the next morning I see that the RAID array is completely recovered
+  (figure 4). And with all my and my family's files being stored across multiple
+  hard drives, I feel at ease again! 
+</p>
+
+<p>
+  P.S. It is important to note that RAID is not a replacement for regular
+  backups. RAID only protects you from hardware malfunctions (which are
+  relatively rare); backups using programs
+  like <span style="font-style:italic">rbackup</span> protect you from yourself.
+  If you accidentally delete an important file, RAID will happily delete that
+  file from all of the drives in the array. As a precaution against this type of
+  error, I have a separate drive on my file server which stores backups for the
+  last 6 months. 
+</p>
+
+<p>
+  P.P.S. And if you are extra paranoid about data loss, it is best to keep a
+  copy of your backups at a physically separate location (the further away the
+  better). This protects you in the event of natural disasters or other
+  unforseen events. I use a server at my parents house in Minnesota (a good
+  2000+ miles away) to keep copies of my backups just in case. 
+</p>
+
+<p>
+  P.P.P.S The more paranoid you are, the closer your system will resemble AWS
+  S3.
 </p>
