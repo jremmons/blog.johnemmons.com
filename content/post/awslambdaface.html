@@ -83,7 +83,7 @@ result!)."
     <li>
       <strong>Micro-scale billing granularity</strong>: AWS Lambda (and other
       competing services) bill based on invocation time rounded up to the
-      nearest 100ms increment, so you only pay for what you use. Cloud VMs and
+      nearest 100ms increment; so you only pay for what you use. Cloud VMs and
       container management services provide this same benefit, but with much
       less granularity. For example, EC2 bills a minimum of 1 hour and GCE VMs
       bill a minimum of 10 minutes. As a result, it is frequently much less
@@ -102,22 +102,16 @@ result!)."
 
   <div class="col-md-6" style="padding-top:5px;">
     NSDI'17 full day
-    <video style="width: 100%;" controls autoplay muted loop>
-      <source src="https://s3-us-west-2.amazonaws.com/blog-john-emmons-assets/awslambdaface/blog_john_emmons_nsdi.mp4" type="video/mp4" />
-      The 'video' tag is not supported by your browser.
-    </video>
+    <iframe width="100%" height="315" src="https://www.youtube.com/embed/RgY_dxuza18" frameborder="0" allowfullscreen></iframe>
   </div>
     
   <div class="col-md-6" style="padding-top:5px;">
     George Porter montage
-    <video style="width: 100%;" controls autoplay muted loop>
-      <source src="https://s3-us-west-2.amazonaws.com/blog-john-emmons-assets/awslambdaface/blog_john_emmons_montage.webm" type="video/webm" />
-      The 'video' tag is not supported by your browser.
-    </video>
+    <iframe width="100%" height="315" src="https://www.youtube.com/embed/0jF8tAnZ9aA" frameborder="0" allowfullscreen></iframe>
   </div>
 
   <div class="col-md-12">
-    Figure 2: The left panel shows six hours of video I recorded while walking
+    Figure 2: The first panel shows six hours of video I recorded while walking
     around with a
     GoPro <a href="/images/awslambdaface/john_emmons_nsdi17.jpg">strapped to my
     head</a> at this
@@ -129,10 +123,11 @@ result!)."
     attendees, <a href="https://cseweb.ucsd.edu/~gmporter/">George
     Porter</a>. Because I had deployed this system on AWS Lambda, the system was
     able to start up 3000+ Lambda workers almost instantly, allowing it to scan
-    over all the frames in the video in just a few minutes. Once all of the
-    frames where George was present were identified,
+    over all the frames in the video very quickly. Once all of the frames where
+    George was present were identified,
     the <a href="http://ex.camera">ExCamera</a> system (which also runs on AWS
-    Lambda) was used to stitch together a montage. 
+    Lambda) was used to stitch together a montage. In total, the face
+    recognition and montage creation took less than 5 minutes and cost about $8!
   </div>
 </div>
 
@@ -148,8 +143,8 @@ result!)."
 </p>
 
 <p>
-  In left panel of figure 2, you see a six hour long video I recorded with a
-  GoPro (<a href="/images/awslambdaface/john_emmons_nsdi17.jpg">strapped to my
+  In the first panel of figure 2, you see a six hour long video I recorded with
+  a GoPro (<a href="/images/awslambdaface/john_emmons_nsdi17.jpg">strapped to my
   head!</a>) from <a href="https://www.usenix.org/conference/nsdi17">USENIX
   NSDI'17</a>, a computer systems and networking conference. I was at the
   conference with <a href="https://cs.stanford.edu/~keithw/">Keith Winstein</a>
@@ -159,11 +154,11 @@ result!)."
   over the faces in the video and stitch together a montage of all of the times
   I encountered our UCSD
   collaborator, <a href="https://cseweb.ucsd.edu/~gmporter/">George Porter</a>
-  (right panel of figure 2); we wanted to make sure he made it to the conference
-  safely! And most importantly, we wanted to do all of this on AWS Lambda so
-  that thousands of instances of our deep nueral network based face recognizer
-  could (1) run in parallel across the video, (2) be billed at a 100ms
-  granularity, and (3) start up instantly after invocation.
+  (the second panel of figure 2); we wanted to make sure he made it to the
+  conference safely! And most importantly, we wanted to do all of this on AWS
+  Lambda so that thousands of instances of our deep nueral network based face
+  recognizer could (1) run in parallel across the video, (2) be billed at a
+  100ms granularity, and (3) start up instantly after invocation.
 </p>
 
 <p>
@@ -184,9 +179,9 @@ result!)."
 <p>
   It is unlikely that the major cloud providers (AWS, Google, IBM, or Microsoft)
   would have predicted that their systems would be used to perform computations
-  like deep neural networks. However, I hope that after reading this blog post
-  you will agree that virtually any bursty, highly parallelizeable application
-  could benefit by using FaaS platforms. It is time that we reexamine the ways
-  we build mobile and desktop applications since it is now possible to
-  affordably and interactively ask for thousands of cores in the cloud.
+  like deep learning. However, I hope that after reading this post you will
+  agree that virtually any bursty, highly parallelizeable application could
+  benefit by using FaaS platforms. It is time that we re-examine the ways we
+  build mobile and desktop applications since it is now possible to affordably
+  and interactively ask for thousands of cores in the cloud!
 </p>
